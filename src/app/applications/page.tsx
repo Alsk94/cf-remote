@@ -102,8 +102,7 @@ export default function ApplicationsPage() {
 
           <div className="mb-6">
             <SearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
+              onSearch={setSearchQuery}
               placeholder="Search applications..."
             />
           </div>

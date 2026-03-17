@@ -113,8 +113,7 @@ export default function TunnelsPage() {
 
           <div className="mb-6">
             <SearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
+              onSearch={setSearchQuery}
               placeholder="Search tunnels..."
             />
           </div>
