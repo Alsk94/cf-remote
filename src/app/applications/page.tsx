@@ -133,7 +133,7 @@ export default function ApplicationsPage() {
                   title={app.name}
                   subtitle={app.domain}
                   status={app.enabled ? 'active' : 'inactive'}
-                  icon={app.enabled ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
+                  icon={app.enabled ? ToggleRight : ToggleLeft}
                 >
                   <div className="mt-4 space-y-2">
                     <div className="flex items-center justify-between text-sm">

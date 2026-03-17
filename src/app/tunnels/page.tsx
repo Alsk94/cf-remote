@@ -80,11 +80,11 @@ export default function TunnelsPage() {
   const getStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
       case 'healthy':
-        return <CheckCircle className="w-5 h-5" />;
+        return CheckCircle;
       case 'down':
-        return <XCircle className="w-5 h-5" />;
+        return XCircle;
       default:
-        return <AlertCircle className="w-5 h-5" />;
+        return AlertCircle;
     }
   };
 

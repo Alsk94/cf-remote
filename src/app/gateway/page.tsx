@@ -139,7 +139,7 @@ export default function GatewayPage() {
                   title={policy.name}
                   subtitle={policy.description || 'No description'}
                   status={policy.enabled ? 'active' : 'inactive'}
-                  icon={policy.enabled ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
+                  icon={policy.enabled ? ToggleRight : ToggleLeft}
                 >
                   <div className="mt-4 space-y-2">
                     <div className="flex items-center justify-between text-sm">
