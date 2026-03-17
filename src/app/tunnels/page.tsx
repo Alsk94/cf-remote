@@ -95,7 +95,7 @@ export default function TunnelsPage() {
       case 'down':
         return 'down';
       default:
-        return 'warning';
+        return 'degraded';
     }
   };
 
