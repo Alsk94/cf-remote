@@ -59,7 +59,7 @@ export default function PullToRefresh({ onRefresh, children }: PullToRefreshProp
       container.removeEventListener('touchmove', handleTouchMove);
       container.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [touchStart, pullDistance, isRefreshing]);
+  }, [touchStart, pullDistance, isRefreshing, handleTouchStart, handleTouchMove, handleTouchEnd]);
 
   const rotation = (pullDistance / threshold) * 360;
   const opacity = Math.min(pullDistance / threshold, 1);

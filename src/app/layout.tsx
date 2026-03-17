@@ -1,11 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
 
 export const metadata: Metadata = {
   title: "Cloudflare Zero Trust Remote",
   description: "Mobile remote control for Cloudflare Zero Trust",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({

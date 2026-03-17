@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "npm run build && wrangler pages deploy ./out",
-    "pages:dev": "wrangler pages dev ./out --port 3000"
+    "pages:build": "npm run build",
+    "pages:deploy": "wrangler pages deploy ./out"
   },
   "dependencies": {
     "next": "^14.2.3",
