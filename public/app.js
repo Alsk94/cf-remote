@@ -24,6 +24,13 @@ class ZeroTrustApp {
     }
 
     checkAuth() {
+        // Check for OAuth callback
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('code')) {
+            this.handleOAuthCallback(urlParams.get('code'));
+            return;
+        }
+
         const accountId = localStorage.getItem('cf_account_id');
         const apiToken = localStorage.getItem('cf_api_token');
         
@@ -37,7 +44,79 @@ class ZeroTrustApp {
         }
     }
 
-    async handleLogin(e) {
+    toggleManualLogin() {
+        const oauthForm = document.querySelector('.form:not(#manual-login-form)');
+        const manualForm = document.getElementById('manual-login-form');
+        
+        if (manualForm.style.display === 'none') {
+            oauthForm.style.display = 'none';
+            manualForm.style.display = 'flex';
+        } else {
+            oauthForm.style.display = 'flex';
+            manualForm.style.display = 'none';
+        }
+    }
+
+    handleCloudflareLogin() {
+        const clientId = 'YOUR_CLOUDFLARE_OAUTH_CLIENT_ID';
+        const redirectUri = encodeURIComponent(window.location.origin);
+        const state = Math.random().toString(36).substring(7);
+        
+        localStorage.setItem('oauth_state', state);
+        
+        const authUrl = `https://dash.cloudflare.com/oauth2/auth?` +
+            `response_type=code&` +
+            `client_id=${clientId}&` +
+            `redirect_uri=${redirectUri}&` +
+            `scope=account:read%20zone:read%20gateway:read%20gateway:edit&` +
+            `state=${state}`;
+        
+        window.location.href = authUrl;
+    }
+
+    async handleOAuthCallback(code) {
+        const state = new URLSearchParams(window.location.search).get('state');
+        const savedState = localStorage.getItem('oauth_state');
+        
+        if (state !== savedState) {
+            this.showToast('Invalid OAuth state', 'error');
+            window.history.replaceState({}, document.title, '/');
+            return;
+        }
+
+        localStorage.removeItem('oauth_state');
+        
+        try {
+            const response = await fetch('/api/oauth/token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to exchange OAuth code');
+            }
+
+            const data = await response.json();
+            
+            localStorage.setItem('cf_account_id', data.account_id);
+            localStorage.setItem('cf_api_token', data.access_token);
+            
+            this.accountId = data.account_id;
+            this.apiToken = data.access_token;
+            
+            window.history.replaceState({}, document.title, '/');
+            this.showScreen('main-screen');
+            this.loadPolicies();
+            this.showToast('Login successful!', 'success');
+        } catch (error) {
+            console.error('OAuth error:', error);
+            this.showToast('OAuth login failed. Please try manual login.', 'error');
+            window.history.replaceState({}, document.title, '/');
+        }
+    }
+
+    async handleManualLogin(e) {
         e.preventDefault();
         
         const accountId = document.getElementById('account-id').value.trim();
@@ -48,7 +127,7 @@ class ZeroTrustApp {
             return;
         }
 
-        const btn = e.target.querySelector('button');
+        const btn = e.target.querySelector('button[type="submit"]');
         btn.disabled = true;
         btn.textContent = 'Logging in...';
 
@@ -74,7 +153,7 @@ class ZeroTrustApp {
             this.showToast('Login failed. Please check your credentials.', 'error');
         } finally {
             btn.disabled = false;
-            btn.textContent = 'Login';
+            btn.textContent = 'Login with API Token';
         }
     }
 
@@ -331,6 +410,9 @@ X-API-Tkthis.Tke
         div.textContent = text;
         return div.innerHTML;
     }
+}
+
+const app = new ZeroTrustApp();
 }
 
 const app = new ZeroTrustApp();
