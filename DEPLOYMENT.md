@@ -1,5 +1,18 @@
 # Deploying to Cloudflare Pages
 
+## ⚠️ CRITICAL: This is a PAGES Project, NOT Workers
+
+**NEVER USE THESE COMMANDS** (they are for Workers):
+- ❌ `wrangler deploy`
+- ❌ `wrangler publish`
+- ❌ `npx wrangler deploy`
+
+**ALWAYS USE** (for Pages):
+- ✅ `wrangler pages deploy ./out`
+- ✅ Cloudflare Dashboard with Git integration
+
+---
+
 This Next.js application is configured for deployment on **Cloudflare Pages**, which provides:
 - Global CDN distribution
 - Automatic HTTPS
@@ -45,15 +58,13 @@ git push -u origin main
 ```bash
 npm install -g wrangler
 ```
-
-2. **Login to Cloudflare**:
-```bash
-wrangler login
-```
-
+b(hoteth "ages" kewod)
 3. **Build your application**:
 ```bash
-cd cf-remote
+`cd
+
+⚠️ **Common Mistake**: Do NOT run `wrangler deploy` - that's for Workers!
+✅ **Correct**: Always use `wrangler pages deploy cf-remote
 npm install
 npm run build
 ```

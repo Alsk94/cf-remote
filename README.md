@@ -182,22 +182,35 @@ npm run lint
 
 ## Deployment
 
-### Cloudflare Pages (Recommended)
+### ⚠️ IMPORTANT: This is a Cloudflare PAGES Project (NOT Workers)
 
-This app is optimized for Cloudflare Pages deployment:
+**DO NOT USE**: `wrangler deploy` or `wrangler publish` (those are for Workers)
 
-**Quick Deploy**:
-```bash
-npm run build
-npm run deploy
-```
+**CORRECT DEPLOYMENT METHODS**:
 
-**Via Dashboard**:
+### Option 1: Cloudflare Dashboard (Recommended - Easiest)
+
 1. Push code to GitHub
-2. Connect repository in Cloudflare Pages
-3. Set build command: `npm run build`
-4. Set output directory: `out`
-5. Deploy automatically
+2. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Pages**
+3. **Create a project** → **Connect to Git**
+4. Select your repository
+5. **Build settings**:
+   - Framework preset: `Next.js (Static HTML Export)`
+   - Build command: `npm run build`
+   - Build output directory: `out`
+   - **Deploy command**: Leave EMPTY (delete if present)
+   - Environment variable: `NODE_VERSION` = `20`
+6. **Save and Deploy**
+
+### Option 2: Wrangler CLI
+
+```bash
+# Build first
+npm run build
+
+# Deploy to Pages (note: "pages" in the command)
+wrangler pages deploy ./out --project-name=cf-remote
+```
 
 See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
 

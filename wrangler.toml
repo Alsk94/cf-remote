@@ -1,3 +1,7 @@
+# Cloudflare Pages Configuration
+# This is a PAGES project, NOT a Workers project
+# Deploy using: wrangler pages deploy ./out
+# Or via Cloudflare Dashboard with Git integration
+
 name = "cf-remote"
-compatibility_date = "2024-01-01"
 pages_build_output_dir = "./out"
