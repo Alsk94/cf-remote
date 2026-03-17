@@ -8,7 +8,7 @@ import SearchBar from '@/components/SearchBar';
 import StatusCard from '@/components/StatusCard';
 import Button from '@/components/Button';
 import { getCredentials } from '@/lib/auth';
-import { getAccessApplications, toggleAccessApplication, type AccessApplication } from '@/services/cloudflare';
+import { listAccessApplications, toggleAccessApplication, type AccessApplication } from '@/services/cloudflare';
 
 export default function ApplicationsPage() {
   const router = useRouter();
@@ -30,7 +30,7 @@ export default function ApplicationsPage() {
         return;
       }
 
-      const data = await getAccessApplications(creds.apiToken, creds.accountId);
+      const data = await listAccessApplications();
       setApplications(data);
       setFilteredApps(data);
     } catch (err) {
@@ -68,7 +68,7 @@ export default function ApplicationsPage() {
         return;
       }
 
-      await toggleAccessApplication(creds.apiToken, creds.accountId, appId, !currentEnabled);
+      await toggleAccessApplication(appId, !currentEnabled);
       
       // Update local state
       setApplications(apps =>

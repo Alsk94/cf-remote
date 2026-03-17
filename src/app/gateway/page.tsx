@@ -8,7 +8,7 @@ import SearchBar from '@/components/SearchBar';
 import StatusCard from '@/components/StatusCard';
 import Button from '@/components/Button';
 import { getCredentials } from '@/lib/auth';
-import { getGatewayPolicies, toggleGatewayPolicy, type GatewayPolicy } from '@/services/cloudflare';
+import { listGatewayPolicies, toggleGatewayPolicy, type GatewayPolicy } from '@/services/cloudflare';
 
 export default function GatewayPage() {
   const router = useRouter();
@@ -30,7 +30,7 @@ export default function GatewayPage() {
         return;
       }
 
-      const data = await getGatewayPolicies(creds.apiToken, creds.accountId);
+      const data = await listGatewayPolicies();
       setPolicies(data);
       setFilteredPolicies(data);
     } catch (err) {
@@ -68,7 +68,7 @@ export default function GatewayPage() {
         return;
       }
 
-      await toggleGatewayPolicy(creds.apiToken, creds.accountId, policyId, !currentEnabled);
+      await toggleGatewayPolicy(policyId, !currentEnabled);
       
       // Update local state
       setPolicies(pols =>

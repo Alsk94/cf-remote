@@ -8,12 +8,12 @@ import SearchBar from '@/components/SearchBar';
 import StatusCard from '@/components/StatusCard';
 import Button from '@/components/Button';
 import { getCredentials } from '@/lib/auth';
-import { getTunnels, deleteTunnel, type Tunnel } from '@/services/cloudflare';
+import { listTunnels, deleteTunnel, type CloudflareTunnel } from '@/services/cloudflare';
 
 export default function TunnelsPage() {
   const router = useRouter();
-  const [tunnels, setTunnels] = useState<Tunnel[]>([]);
-  const [filteredTunnels, setFilteredTunnels] = useState<Tunnel[]>([]);
+  const [tunnels, setTunnels] = useState<CloudflareTunnel[]>([]);
+  const [filteredTunnels, setFilteredTunnels] = useState<CloudflareTunnel[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState('');
@@ -29,7 +29,7 @@ export default function TunnelsPage() {
         return;
       }
 
-      const data = await getTunnels(creds.apiToken, creds.accountId);
+      const data = await listTunnels();
       setTunnels(data);
       setFilteredTunnels(data);
     } catch (err) {
@@ -70,7 +70,7 @@ export default function TunnelsPage() {
         return;
       }
 
-      await deleteTunnel(creds.apiToken, creds.accountId, tunnelId);
+      await deleteTunnel(tunnelId);
       await loadTunnels();
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Failed to delete tunnel');
