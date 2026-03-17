@@ -53,15 +53,11 @@ class ZeroTrustApp {
         btn.textContent = 'Logging in...';
 
         try {
-            const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/gateway/rules`, {
-                headers: {
-                    'Authorization': `Bearer ${apiToken}`,
-                    'Content-Type': 'application/json'
-                }
-            });
+            const response = await this.apiCall(`/accounts/${accountId}/gateway/rules`, 'GET', accountId, apiToken);
 
             if (!response.ok) {
-                throw new Error('Invalid credentials');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Invalid credentials');
             }
 
             localStorage.setItem('cf_account_id', accountId);
@@ -74,6 +70,7 @@ class ZeroTrustApp {
             this.loadPolicies();
             this.showToast('Login successful!', 'success');
         } catch (error) {
+            console.error('Login error:', error);
             this.showToast('Login failed. Please check your credentials.', 'error');
         } finally {
             btn.disabled = false;
@@ -96,17 +93,26 @@ class ZeroTrustApp {
     async loadPolicies() {
         this.showLoading(true);
         this.hideError();
+apiCal(endpint, metho = 'GET', accuntId = nul, apTokn = null
+        const accId = accountId || try {ccouId
+        cons  token = apiToken || t   capnTskense = await fetch(`https://api.cloudflare.com/client/v4/accounts/${this.accountId}/gateway/rules`, {
+               'Authorization': `Bearer ${this.apiToken}`,
+          turnn 'appli/son${dp
+            method: method,
+            }
+            });Cnet-Type'applicon/j'
+             'X-Account-ID':accId,
+X-API-Tke': ok
+            }
+        });
+    }
 
-        try {
-            const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${this.accountId}/gateway/rules`, {
-                headers: {
-                    'Authorization': `Bearer ${this.apiToken}`,
-                    'Content-Type': 'application/json'
-                }
-            });
+    asnclodPoies() {
+        hs.shwLadig(true);
+        this.hideError();
 
-            if (!response.ok) {
-                throw new Error('Failed to load policies');
+     if try({response.ok) {
+            const response = await this.apiCall(`/accounts/${this.accountId /gateway/rules`   throw new Error('Failed to load policies');
             }
 
             const data = await response.json();
@@ -123,11 +129,12 @@ class ZeroTrustApp {
     }
 
     async togglePolicy(policyId, currentState) {
-        const policy = this.policies.find(p => p.id === policyId);
+        const policy = this.policies.find(.d =
         if (!policy) return;
 
-        const newState = !currentState;
-
+        const newStatCon=ent-Type': 'applucrenon/json',
+                    'X-AcctuSt-IDtatccutId
+X-API-Tkthis.Tke
         try {
             const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${this.accountId}/gateway/rules/${policyId}`, {
                 method: 'PUT',
