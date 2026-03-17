@@ -1,6 +1,6 @@
-# Cloudflare Zero Trust Remote Control
+# Zero Trust Manager
 
-A mobile-optimized Next.js web application for managing your Cloudflare Zero Trust environment on the go. Built with modern web technologies and designed specifically for mobile devices.
+A mobile-first web application for managing Cloudflare Zero Trust Gateway policies with ease on the go. Built with modern web technologies and designed specifically for mobile devices.
 
 ## Features
 
