@@ -1,27 +1,17 @@
-# Deploying to Cloudflare Pages
+# Deploying to Cloudflare Workers
 
-## ⚠️ CRITICAL: This is a PAGES Project, NOT Workers
-
-**NEVER USE THESE COMMANDS** (they are for Workers):
-- ❌ `wrangler deploy`
-- ❌ `wrangler publish`
-- ❌ `npx wrangler deploy`
-
-**ALWAYS USE** (for Pages):
-- ✅ `wrangler pages deploy ./out`
-- ✅ Cloudflare Dashboard with Git integration
-
----
-
-This Next.js application is configured for deployment on **Cloudflare Pages**, which provides:
-- Global CDN distribution
+This Next.js application is configured for deployment on **Cloudflare Workers** with static asset serving, which provides:
+- Global edge network deployment
 - Automatic HTTPS
-- Free hosting for static sites
-- Edge network performance
+- Fast static asset delivery
+- Serverless architecture
 
-## Why Cloudflare Pages (not Workers)?
+## How It Works
 
-Next.js with App Router uses React Server Components and requires a Node.js runtime. Cloudflare Workers has limitations that make it incompatible with full Next.js apps. **Cloudflare Pages** is the recommended platform for Next.js on Cloudflare infrastructure.
+The app uses:
+1. **Next.js Static Export** - Builds static HTML/CSS/JS to `./out` directory
+2. **Cloudflare Workers** - Serves the static files from the edge
+3. **KV Asset Handler** - Efficiently serves static assets from Workers
 
 ## Deployment Options
 
@@ -35,7 +25,7 @@ git commit -m "Initial commit"
 git remote add origin <your-github-repo-url>
 git push -u origin main
 ```
-
+mentWrangrCLI
 2. **Connect to Cloudflare Pages**:
    - Go to [Cloudflare Dashboard](https://dash.cloudflare.com/)
    - Navigate to **Pages** → **Create a project**

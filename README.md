@@ -182,35 +182,37 @@ npm run lint
 
 ## Deployment
 
-### ⚠️ IMPORTANT: This is a Cloudflare PAGES Project (NOT Workers)
+### Cloudflare Workers Deployment
 
-**DO NOT USE**: `wrangler deploy` or `wrangler publish` (those are for Workers)
+This app is configured to deploy as a Cloudflare Worker with static assets.
 
-**CORRECT DEPLOYMENT METHODS**:
-
-### Option 1: Cloudflare Dashboard (Recommended - Easiest)
-
-1. Push code to GitHub
-2. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Pages**
-3. **Create a project** → **Connect to Git**
-4. Select your repository
-5. **Build settings**:
-   - Framework preset: `Next.js (Static HTML Export)`
-   - Build command: `npm run build`
-   - Build output directory: `out`
-   - **Deploy command**: Leave EMPTY (delete if present)
-   - Environment variable: `NODE_VERSION` = `20`
-6. **Save and Deploy**
-
-### Option 2: Wrangler CLI
-
+**Quick Deploy**:
 ```bash
-# Build first
+npm run deploy
+```
+
+**Manual Steps**:
+```bash
+# Install dependencies
+npm install
+
+# Build the Next.js app
 npm run build
 
-# Deploy to Pages (note: "pages" in the command)
-wrangler pages deploy ./out --project-name=cf-remote
+# Deploy to Cloudflare Workers
+wrangler deploy
 ```
+
+**First Time Setup**:
+```bash
+# Login to Cloudflare
+wrangler login
+
+# Deploy
+npm run deploy
+```
+
+Your app will be deployed to `https://cf-remote.<your-subdomain>.workers.dev`
 
 See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
 

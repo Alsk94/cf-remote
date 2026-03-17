@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
+    "@cloudflare/kv-asset-handler": "^0.3.4",
     "next": "^14.2.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
