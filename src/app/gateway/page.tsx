@@ -138,7 +138,7 @@ export default function GatewayPage() {
                   key={policy.id}
                   title={policy.name}
                   subtitle={policy.description || 'No description'}
-                  status={policy.enabled ? 'healthy' : 'warning'}
+                  status={policy.enabled ? 'active' : 'inactive'}
                   icon={policy.enabled ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
                 >
                   <div className="mt-4 space-y-2">

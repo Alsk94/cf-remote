@@ -132,7 +132,7 @@ export default function ApplicationsPage() {
                   key={app.id}
                   title={app.name}
                   subtitle={app.domain}
-                  status={app.enabled ? 'healthy' : 'warning'}
+                  status={app.enabled ? 'active' : 'inactive'}
                   icon={app.enabled ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
                 >
                   <div className="mt-4 space-y-2">
