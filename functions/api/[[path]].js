@@ -1,37 +1,7 @@
-import indexHtml from '../public/index.html';
-import appJs from '../public/app.js';
-import stylesCss from '../public/styles.css';
-
-export default {
-  async fetch(request, env, ctx) {
-    const url = new URL(request.url);
-    
-    // Handle API proxy requests
-    if (url.pathname.startsWith('/api/')) {
-      return handleApiRequest(request, url);
-    }
-    
-    // Serve static files
-    if (url.pathname === '/app.js') {
-      return new Response(appJs, {
-        headers: { 'Content-Type': 'application/javascript' }
-      });
-    }
-    
-    if (url.pathname === '/styles.css') {
-      return new Response(stylesCss, {
-        headers: { 'Content-Type': 'text/css' }
-      });
-    }
-    
-    // Serve index.html for all other routes
-    return new Response(indexHtml, {
-      headers: { 'Content-Type': 'text/html' }
-    });
-  },
-};
-
-async function handleApiRequest(request, url) {
+export async function onRequest(context) {
+  const { request, env } = context;
+  const url = new URL(request.url);
+  
   // Enable CORS
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
