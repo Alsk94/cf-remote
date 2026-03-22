@@ -5,7 +5,6 @@
   "scripts": {
     "build": "mkdir -p dist && cp -r public/* dist/",
     "dev": "wrangler pages dev dist --compatibility-date=2024-01-01",
-    "deploy": "echo 'Deployment handled by Cloudflare Pages CI/CD'",
     "preview": "wrangler pages dev dist --remote"
   },
   "dependencies": {
