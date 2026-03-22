@@ -18,28 +18,23 @@ export default {
         },
         {
           ASSET_NAMESPACE: env.__STATIC_CONTENT,
-          ASSET_MANIFEST: JSON.parse(__STATIC_CONTENT_MANIFEST),
         }
       );
     } catch (e) {
       // If asset not found, serve index.html for SPA routing
       try {
-        const notFoundResponse = await getAssetFromKV(
+        const indexRequest = new Request(`${url.origin}/index.html`, request);
+        return await getAssetFromKV(
           {
-            request: new Request(`${url.origin}/index.html`, request),
+            request: indexRequest,
             waitUntil: ctx.waitUntil.bind(ctx),
           },
           {
             ASSET_NAMESPACE: env.__STATIC_CONTENT,
-            ASSET_MANIFEST: JSON.parse(__STATIC_CONTENT_MANIFEST),
           }
         );
-        return new Response(notFoundResponse.body, {
-          ...notFoundResponse,
-          status: 200,
-        });
       } catch (e) {
-        return new Response('Not Found', { status: 404 });
+        return new Response(`Error: ${e.message}`, { status: 404 });
       }
     }
   },
