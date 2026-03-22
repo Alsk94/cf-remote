@@ -1,7 +1,4 @@
-// Import static assets
-import indexHtml from '../dist/index.html';
-import appJs from '../dist/app.js';
-import stylesCss from '../dist/styles.css';
+import { getAssetFromKV } from '@cloudflare/kv-asset-handler';
 
 export default {
   async fetch(request, env, ctx) {
@@ -12,32 +9,39 @@ export default {
       return handleApiRequest(request, url);
     }
     
-    // Serve static files
-    if (url.pathname === '/app.js') {
-      return new Response(appJs, {
-        headers: { 
-          'Content-Type': 'application/javascript',
-          'Cache-Control': 'public, max-age=3600'
+    // Serve static files from KV
+    try {
+      return await getAssetFromKV(
+        {
+          request,
+          waitUntil: ctx.waitUntil.bind(ctx),
+        },
+        {
+          ASSET_NAMESPACE: env.__STATIC_CONTENT,
+          ASSET_MANIFEST: JSON.parse(__STATIC_CONTENT_MANIFEST),
         }
-      });
-    }
-    
-    if (url.pathname === '/styles.css') {
-      return new Response(stylesCss, {
-        headers: { 
-          'Content-Type': 'text/css',
-          'Cache-Control': 'public, max-age=3600'
-        }
-      });
-    }
-    
-    // Serve index.html for all other routes (SPA)
-    return new Response(indexHtml, {
-      headers: { 
-        'Content-Type': 'text/html',
-        'Cache-Control': 'public, max-age=300'
+      );
+    } catch (e) {
+      // If asset not found, serve index.html for SPA routing
+      try {
+        const notFoundResponse = await getAssetFromKV(
+          {
+            request: new Request(`${url.origin}/index.html`, request),
+            waitUntil: ctx.waitUntil.bind(ctx),
+          },
+          {
+            ASSET_NAMESPACE: env.__STATIC_CONTENT,
+            ASSET_MANIFEST: JSON.parse(__STATIC_CONTENT_MANIFEST),
+          }
+        );
+        return new Response(notFoundResponse.body, {
+          ...notFoundResponse,
+          status: 200,
+        });
+      } catch (e) {
+        return new Response('Not Found', { status: 404 });
       }
-    });
+    }
   },
 };
 
