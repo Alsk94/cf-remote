@@ -21,7 +21,29 @@
                     <h1>Zero Trust Manager</h1>
                 </div>
                 
-                <form id="login-form" class="form">
+                <div class="form">
+                    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+                        Sign in with your Cloudflare account to manage your Zero Trust policies
+                    </p>
+                    
+                    <button id="cloudflare-login-btn" class="btn btn-primary" style="width: 100%;">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" style="margin-right: 0.5rem;">
+                            <path d="M15.3 5.3c-.2-.2-.4-.3-.7-.3H5.4c-.3 0-.5.1-.7.3-.2.2-.3.4-.3.7v8c0 .3.1.5.3.7.2.2.4.3.7.3h9.2c.3 0 .5-.1.7-.3.2-.2.3-.4.3-.7V6c0-.3-.1-.5-.3-.7z"/>
+                        </svg>
+                        Sign in with Cloudflare
+                    </button>
+                    
+                    <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
+                            Or use API credentials
+                        </p>
+                        <button id="manual-login-toggle" type="button" class="btn" style="background: transparent; border: 1px solid var(--border); color: var(--text);">
+                            Manual Login
+                        </button>
+                    </div>
+                </div>
+                
+                <form id="manual-login-form" class="form" style="display: none;">
                     <div class="form-group">
                         <label for="account-id">Account ID</label>
                         <input type="text" id="account-id" placeholder="Enter your Cloudflare Account ID" required>
@@ -32,7 +54,10 @@
                         <input type="password" id="api-token" placeholder="Enter your API Token" required>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="submit" class="btn btn-primary">Login with API Token</button>
+                    <button type="button" id="back-to-oauth" class="btn" style="background: transparent; border: 1px solid var(--border); color: var(--text); margin-top: 0.5rem;">
+                        Back
+                    </button>
                 </form>
             </div>
         </div>
@@ -99,6 +124,6 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app-oauth.js"></script>
 </body>
 </html>
