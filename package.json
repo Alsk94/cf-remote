@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "build": "mkdir -p dist && cp -r public/* dist/",
-    "dev": "wrangler pages dev dist --compatibility-date=2024-01-01",
-    "preview": "wrangler pages dev dist --remote"
+    "dev": "wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
+    "preview": "wrangler dev --remote"
   },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "^0.3.4",
