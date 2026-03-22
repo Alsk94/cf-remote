@@ -24,13 +24,6 @@ class ZeroTrustApp {
     }
 
     checkAuth() {
-        // Check for OAuth callback
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('code')) {
-            this.handleOAuthCallback(urlParams.get('code'));
-            return;
-        }
-
         const accountId = localStorage.getItem('cf_account_id');
         const apiToken = localStorage.getItem('cf_api_token');
         
@@ -44,79 +37,7 @@ class ZeroTrustApp {
         }
     }
 
-    toggleManualLogin() {
-        const oauthForm = document.querySelector('.form:not(#manual-login-form)');
-        const manualForm = document.getElementById('manual-login-form');
-        
-        if (manualForm.style.display === 'none') {
-            oauthForm.style.display = 'none';
-            manualForm.style.display = 'flex';
-        } else {
-            oauthForm.style.display = 'flex';
-            manualForm.style.display = 'none';
-        }
-    }
-
-    handleCloudflareLogin() {
-        const clientId = 'YOUR_CLOUDFLARE_OAUTH_CLIENT_ID';
-        const redirectUri = encodeURIComponent(window.location.origin);
-        const state = Math.random().toString(36).substring(7);
-        
-        localStorage.setItem('oauth_state', state);
-        
-        const authUrl = `https://dash.cloudflare.com/oauth2/auth?` +
-            `response_type=code&` +
-            `client_id=${clientId}&` +
-            `redirect_uri=${redirectUri}&` +
-            `scope=account:read%20zone:read%20gateway:read%20gateway:edit&` +
-            `state=${state}`;
-        
-        window.location.href = authUrl;
-    }
-
-    async handleOAuthCallback(code) {
-        const state = new URLSearchParams(window.location.search).get('state');
-        const savedState = localStorage.getItem('oauth_state');
-        
-        if (state !== savedState) {
-            this.showToast('Invalid OAuth state', 'error');
-            window.history.replaceState({}, document.title, '/');
-            return;
-        }
-
-        localStorage.removeItem('oauth_state');
-        
-        try {
-            const response = await fetch('/api/oauth/token', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code })
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to exchange OAuth code');
-            }
-
-            const data = await response.json();
-            
-            localStorage.setItem('cf_account_id', data.account_id);
-            localStorage.setItem('cf_api_token', data.access_token);
-            
-            this.accountId = data.account_id;
-            this.apiToken = data.access_token;
-            
-            window.history.replaceState({}, document.title, '/');
-            this.showScreen('main-screen');
-            this.loadPolicies();
-            this.showToast('Login successful!', 'success');
-        } catch (error) {
-            console.error('OAuth error:', error);
-            this.showToast('OAuth login failed. Please try manual login.', 'error');
-            window.history.replaceState({}, document.title, '/');
-        }
-    }
-
-    async handleManualLogin(e) {
+    async handleLogin(e) {
         e.preventDefault();
         
         const accountId = document.getElementById('account-id').value.trim();
@@ -127,16 +48,21 @@ class ZeroTrustApp {
             return;
         }
 
-        const btn = e.target.querySelector('button[type="submit"]');
+        const btn = e.target.querySelector('button');
         btn.disabled = true;
         btn.textContent = 'Logging in...';
 
         try {
-            const response = await this.apiCall(`/accounts/${accountId}/gateway/rules`, 'GET', accountId, apiToken);
+            const response = await fetch(`/api/accounts/${accountId}/gateway/rules`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Account-ID': accountId,
+                    'X-API-Token': apiToken
+                }
+            });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Invalid credentials');
+                throw new Error('Invalid credentials');
             }
 
             localStorage.setItem('cf_account_id', accountId);
@@ -149,11 +75,10 @@ class ZeroTrustApp {
             this.loadPolicies();
             this.showToast('Login successful!', 'success');
         } catch (error) {
-            console.error('Login error:', error);
             this.showToast('Login failed. Please check your credentials.', 'error');
         } finally {
             btn.disabled = false;
-            btn.textContent = 'Login with API Token';
+            btn.textContent = 'Login';
         }
     }
 
@@ -172,26 +97,18 @@ class ZeroTrustApp {
     async loadPolicies() {
         this.showLoading(true);
         this.hideError();
-apiCal(endpint, metho = 'GET', accuntId = nul, apTokn = null
-        const accId = accountId || try {ccouId
-        cons  token = apiToken || t   capnTskense = await fetch(`https://api.cloudflare.com/client/v4/accounts/${this.accountId}/gateway/rules`, {
-               'Authorization': `Bearer ${this.apiToken}`,
-          turnn 'appli/son${dp
-            method: method,
-            }
-            });Cnet-Type'applicon/j'
-             'X-Account-ID':accId,
-X-API-Tke': ok
-            }
-        });
-    }
 
-    asnclodPoies() {
-        hs.shwLadig(true);
-        this.hideError();
+        try {
+            const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${this.accountId}/gateway/rules`, {
+                headeCon:ent-Type': 'applcon/json',
+                    'X-Accut-IDccutId
+                    'X-API-Tukorn':this.`e$T.keaiToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
 
-     if try({response.ok) {
-            const response = await this.apiCall(`/accounts/${this.accountId /gateway/rules`   throw new Error('Failed to load policies');
+            if (!response.ok) {
+                throw new Error('Failed to load policies');
             }
 
             const data = await response.json();
@@ -208,16 +125,16 @@ X-API-Tke': ok
     }
 
     async togglePolicy(policyId, currentState) {
-        const policy = this.policies.find(.d =
+        const policy = this.policies.find(p => p.id === policyId);
         if (!policy) return;
 
-        const newStatCon=ent-Type': 'applucrenon/json',
-                    'X-AcctuSt-IDtatccutId
-X-API-Tkthis.Tke
+        const newState = !currentState;
+
         try {
             const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${this.accountId}/gateway/rules/${policyId}`, {
-                method: 'PUT',
-                headers: {
+                methoCon ent-Type': 'applTc,on/json',
+                    'X-Accut-IDccutId
+                headeX-API-Tsk{this.Tke
                     'Authorization': `Bearer ${this.apiToken}`,
                     'Content-Type': 'application/json'
                 },
@@ -410,9 +327,6 @@ X-API-Tkthis.Tke
         div.textContent = text;
         return div.innerHTML;
     }
-}
-
-const app = new ZeroTrustApp();
 }
 
 const app = new ZeroTrustApp();
