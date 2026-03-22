@@ -1,4 +1,4 @@
-import { getAssetFromKV } from '@cloudflare/kv-asset-handler';
+import { getAssetFromKV, mapRequestToAsset } from '@cloudflare/kv-asset-handler';
 
 export default {
   async fetch(request, env, ctx) {
@@ -18,15 +18,22 @@ export default {
         },
         {
           ASSET_NAMESPACE: env.__STATIC_CONTENT,
+          mapRequestToAsset: req => {
+            // Serve index.html for root path
+            const url = new URL(req.url);
+            if (url.pathname === '/') {
+              return new Request(`${url.origin}/index.html`, req);
+            }
+            return req;
+          },
         }
       );
     } catch (e) {
       // If asset not found, serve index.html for SPA routing
       try {
-        const indexRequest = new Request(`${url.origin}/index.html`, request);
         return await getAssetFromKV(
           {
-            request: indexRequest,
+            request: new Request(`${url.origin}/index.html`, request),
             waitUntil: ctx.waitUntil.bind(ctx),
           },
           {
@@ -34,7 +41,10 @@ export default {
           }
         );
       } catch (e) {
-        return new Response(`Error: ${e.message}`, { status: 404 });
+        return new Response(`Error loading page: ${e.message}`, { 
+          status: 404,
+          headers: { 'Content-Type': 'text/plain' }
+        });
       }
     }
   },
