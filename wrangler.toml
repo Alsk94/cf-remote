@@ -3,5 +3,8 @@ main = "src/index.js"
 compatibility_date = "2024-01-01"
 account_id = "8f4f597adc71e011d20f8f20c7bf0d95"
 
+[workers]
+account_id = "8f4f597adc71e011d20f8f20c7bf0d95"
+
 [assets]
 directory = "./dist"
