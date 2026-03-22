@@ -1,0 +1,6 @@
+# Cloudflare API Token for Wrangler deployment
+# Create a token at: https://dash.cloudflare.com/profile/api-tokens
+# Required permissions: Workers Scripts:Edit, Workers KV:Edit
+
+CLOUDFLARE_API_TOKEN=your_api_token_here
+CLOUDFLARE_ACCOUNT_ID=your_account_id_here
