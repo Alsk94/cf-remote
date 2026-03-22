@@ -4,6 +4,12 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     
+    // Handle OAuth endpoint separately (no auth required)
+    if (url.pathname === '/api/oauth/token') {
+      // Let Pages Function handle OAuth
+      return env.ASSETS.fetch(request);
+    }
+    
     // Handle API proxy requests
     if (url.pathname.startsWith('/api/')) {
       return handleApiRequest(request, url);
